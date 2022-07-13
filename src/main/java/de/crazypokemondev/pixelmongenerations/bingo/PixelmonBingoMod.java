@@ -3,7 +3,6 @@ package de.crazypokemondev.pixelmongenerations.bingo;
 import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.lypaka.lypakautils.ConfigurationLoaders.ConfigUtils;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,7 +14,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Mod(modid = PixelmonBingoMod.MODID, name = PixelmonBingoMod.NAME, version = PixelmonBingoMod.VERSION)
+@Mod(modid = PixelmonBingoMod.MODID, name = PixelmonBingoMod.NAME, version = PixelmonBingoMod.VERSION,
+        dependencies = "required-after:pixelmon@[8.7.1,);required-after:lypakautils@[0.0.2,);")
 public class PixelmonBingoMod
 {
     public static final String MODID = "pixelmongenerationsbingo";
