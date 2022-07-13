@@ -1,6 +1,6 @@
 [
 {
-  "modid": "de.crazypokemondev.pixelmongenerations.bingo",
+  "modid": "pixelmongenerationsbingo",
   "name": "Pixelmon Bingo",
   "description": "Play Bingo by catching pokemon - the pixelmon generations version!",
   "version": "${version}",

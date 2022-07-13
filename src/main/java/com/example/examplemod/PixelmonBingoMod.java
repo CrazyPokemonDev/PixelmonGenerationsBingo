@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 @Mod(modid = PixelmonBingoMod.MODID, name = PixelmonBingoMod.NAME, version = PixelmonBingoMod.VERSION)
 public class PixelmonBingoMod
 {
-    public static final String MODID = "de.crazypokemondev.pixelmongenerations.bingo";
+    public static final String MODID = "pixelmongenerationsbingo";
     public static final String NAME = "Pixelmon Bingo";
     public static final String VERSION = "0.0.1";
     public static BasicConfigManager configManager;
