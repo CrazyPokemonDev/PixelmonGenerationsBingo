@@ -71,6 +71,7 @@ dependencies {
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
     compile name: 'pixelmongenerations-1-12-2-8-7-1-jar'
+    compile name: 'LypakaUtils-0.0.2'
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
