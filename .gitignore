@@ -26,4 +26,4 @@ forge*changelog.txt
 
 # own
 libs/*
-!libs
+!libs/.gitkeep
