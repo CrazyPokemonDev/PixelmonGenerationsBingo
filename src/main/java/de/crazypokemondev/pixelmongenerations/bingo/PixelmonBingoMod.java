@@ -2,11 +2,13 @@ package de.crazypokemondev.pixelmongenerations.bingo;
 
 import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.lypaka.lypakautils.ConfigurationLoaders.ConfigUtils;
+import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
@@ -21,21 +23,21 @@ public class PixelmonBingoMod
     public static final String VERSION = "0.0.1";
     public static BasicConfigManager configManager;
 
-    private static Logger logger;
+    public static Logger LOGGER;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) throws IOException {
-        logger = event.getModLog();
+    public void preInit(FMLPreInitializationEvent event) throws IOException, ObjectMappingException {
+        LOGGER = event.getModLog();
         Path dir = ConfigUtils.checkDir(Paths.get("./config/pixelmonbingo"));
         String[] files = new String[]{"pixelmonbingo.conf"};
-        configManager = new BasicConfigManager(files, dir, PixelmonBingoMod.class, NAME, MODID, logger);
+        configManager = new BasicConfigManager(files, dir, PixelmonBingoMod.class, NAME, MODID, LOGGER);
         configManager.init();
+        PixelmonBingoConfig.load(configManager);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        // some example code
-        logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
     }
 }
