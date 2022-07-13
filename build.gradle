@@ -70,10 +70,10 @@ dependencies {
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
-    compileOnly fg.deobf(name: 'pixelmongenerations-1-12-2-8-7-1-jar')
+    compileOnly fg.deobf(name: 'PixelmonGenerations-1.12.2-8.7.1')
     compileOnly fg.deobf(name: 'LypakaUtils-0.0.2')
 
-    runtimeOnly name: 'pixelmongenerations-1-12-2-8-7-1-jar'
+    runtimeOnly name: 'PixelmonGenerations-1.12.2-8.7.1'
     runtimeOnly name: 'LypakaUtils-0.0.2'
 
     // Real examples
