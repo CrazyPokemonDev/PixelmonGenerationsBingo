@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package de.crazypokemondev.pixelmongenerations.bingo;
 
 import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.lypaka.lypakautils.ConfigurationLoaders.ConfigUtils;
