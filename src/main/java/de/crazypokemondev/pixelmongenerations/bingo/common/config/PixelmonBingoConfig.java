@@ -5,7 +5,6 @@ import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.pixelmongenerations.core.enums.EnumSpecies;
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import scala.Int;
 
 import java.util.ArrayList;
 import java.util.List;
