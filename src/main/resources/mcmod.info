@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "de.crazypokemondev.pixelmongenerations.bingo",
+  "name": "Pixelmon Bingo",
+  "description": "Play Bingo by catching pokemon - the pixelmon generations version!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Olfi01"],
+  "credits": "Lypaka, for providing the utils library and general support",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
