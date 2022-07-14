@@ -4,3 +4,10 @@
 Put the dependency jars that aren't accessible from any public repository
 into the `libs` folder. This includes, but isn't necessarily limited to the
 pixelmon generations mod itself.
+
+Pull the access transformers from the pixelmon generations jar and also
+place them into the `libs` folder.
+## Development
+### New tasks
+Create a new class extending BingoTask and handle it in all the places 
+annotated with //TaskTypeSwitch.
