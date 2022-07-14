@@ -6,4 +6,9 @@ public class EmptyTask extends BingoTask {
     public String toString() {
         return ID;
     }
+
+    @Override
+    public void drawIcon(int x, int y, int w, int h, float zLevel) {
+
+    }
 }

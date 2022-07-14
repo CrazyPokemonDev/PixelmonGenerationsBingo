@@ -1,7 +1,10 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import com.pixelmongenerations.client.gui.GuiHelper;
 import com.pixelmongenerations.core.enums.EnumSpecies;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -28,6 +31,13 @@ public class CatchPokemonTask extends BingoTask {
     @Override
     public String toString() {
         return ID + BingoTask.PARAM_SEPARATOR + species.getNationalPokedexInteger();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void drawIcon(int x, int y, int w, int h, float zLevel) {
+        GuiHelper.bindPokeSprite(species, false, -1, -1);
+        GuiHelper.drawImageQuad(x, y, w, h, 0, 0, 1, 1, zLevel);
     }
 
     public static CatchPokemonTask getRandomTask() {

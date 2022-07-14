@@ -1,5 +1,8 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 public abstract class BingoTask {
 
     public static final String PARAM_SEPARATOR = ":";
@@ -24,4 +27,7 @@ public abstract class BingoTask {
                 return new EmptyTask();
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    public abstract void drawIcon(int x, int y, int w, int h, float zLevel);
 }

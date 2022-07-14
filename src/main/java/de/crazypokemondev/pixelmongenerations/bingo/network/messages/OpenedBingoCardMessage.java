@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class OpenedBingoCardMessage implements IMessage {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
-    private Map<Integer, String> card = new HashMap<>();
+    private Map<Integer, String> card;
     public OpenedBingoCardMessage(){}
 
     public OpenedBingoCardMessage(Map<Integer, String> card) {
@@ -33,11 +33,12 @@ public class OpenedBingoCardMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        card = new HashMap<>();
         int i = 0;
         StringBuilder s = new StringBuilder();
         while (buf.readerIndex() < buf.writerIndex()) {
             CharSequence c = buf.readCharSequence(1, CHARSET);
-            if (c == BingoTask.TASK_SEPARATOR) {
+            if (BingoTask.TASK_SEPARATOR.contentEquals(c)) {
                 card.put(i, s.toString());
                 s = new StringBuilder();
                 i++;
