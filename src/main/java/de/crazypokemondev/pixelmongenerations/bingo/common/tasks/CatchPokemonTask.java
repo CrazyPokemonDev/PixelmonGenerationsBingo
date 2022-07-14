@@ -3,9 +3,11 @@ package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 import com.pixelmongenerations.client.gui.GuiHelper;
 import com.pixelmongenerations.core.enums.EnumSpecies;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,6 +29,10 @@ public class CatchPokemonTask extends BingoTask {
     }
 
     public static final String ID = "catch-pokemon";
+    @Override
+    public String getIdentifier() {
+        return ID;
+    }
 
     @Override
     public String toString() {
@@ -72,5 +78,13 @@ public class CatchPokemonTask extends BingoTask {
             }
         }
         return speciesPool;
+    }
+
+    @NotNull
+    @Override
+    public Optional<List<String>> getToolTip() {
+        String translateKey = getTranslateKey();
+        String formattedString = I18n.format(translateKey, species.getPokemonName());
+        return Optional.of(Collections.singletonList(formattedString));
     }
 }

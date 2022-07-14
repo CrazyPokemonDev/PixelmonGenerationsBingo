@@ -1,13 +1,13 @@
 package de.crazypokemondev.pixelmongenerations.bingo.client.gui;
 
-import com.pixelmongenerations.client.gui.GuiHelper;
-import com.pixelmongenerations.client.render.custom.PixelmonItemStackRenderer;
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BingoCardScreen extends GuiScreen {
     private final Map<Integer, BingoTask> card;
@@ -34,14 +34,22 @@ public class BingoCardScreen extends GuiScreen {
         int x = (width - WIDTH) / 2;
         int y = (height - HEIGHT) / 2;
         drawTexturedModalRect(x, y, 0, 0, WIDTH, HEIGHT);
+        Optional<List<String>> toolTip = Optional.empty();
         for (int i = 0; i < 25; i++) {
             int row = i / 5;
             int col = i % 5;
             BingoTask task = card.get(i);
             if (task == null) continue;
-            task.drawIcon(x + OFFSET_X + col * COL_WIDTH, y + OFFSET_Y + row * ROW_HEIGHT,
+            int iconX = x + OFFSET_X + col * COL_WIDTH;
+            int iconY = y + OFFSET_Y + row * ROW_HEIGHT;
+            task.drawIcon(iconX, iconY,
                     COL_WIDTH, ROW_HEIGHT, zLevel);
+            if (mouseX >= iconX && mouseX < iconX + COL_WIDTH
+                    && mouseY >= iconY && mouseY < iconY + ROW_HEIGHT) {
+                toolTip = task.getToolTip();
+            }
         }
+        toolTip.ifPresent(strings -> drawHoveringText(strings, mouseX, mouseY, fontRenderer));
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

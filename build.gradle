@@ -49,7 +49,6 @@ minecraft {
                 }
             }
         }
-
         server {
 
             // Recommended logging data for a userdev environment
@@ -66,6 +65,8 @@ minecraft {
         }
     }
 }
+
+processResources.outputs.upToDateWhen { false }
 
 repositories {
     flatDir {

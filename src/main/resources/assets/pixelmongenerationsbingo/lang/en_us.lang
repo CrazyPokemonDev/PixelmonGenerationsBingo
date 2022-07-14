@@ -1,2 +1,8 @@
+# Commands
 commands.pixelmongenerationsbingo.bingo.usage=/bingo
+
+# Items
 item.pixelmongenerationsbingo.bingo_card.name=Bingo Card
+
+# GUI
+gui.pixelmongenerationsbingo.tasks.catch-pokemon.tooltip=Catch one %s

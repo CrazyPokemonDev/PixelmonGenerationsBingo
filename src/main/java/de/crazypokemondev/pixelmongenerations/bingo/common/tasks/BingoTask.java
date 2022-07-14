@@ -1,12 +1,20 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class BingoTask {
 
     public static final String PARAM_SEPARATOR = ":";
     public static final String TASK_SEPARATOR = ";";
+
+    public abstract String getIdentifier();
 
     /**
      * Returns a string representation of the task. This should be an identifier for the task type,
@@ -30,4 +38,15 @@ public abstract class BingoTask {
 
     @SideOnly(Side.CLIENT)
     public abstract void drawIcon(int x, int y, int w, int h, float zLevel);
+
+    @NotNull
+    public Optional<List<String>> getToolTip() {
+        String translateKey = getTranslateKey();
+        return Optional.of(Collections.singletonList(I18n.format(translateKey)));
+    }
+
+    @NotNull
+    public String getTranslateKey() {
+        return "gui.pixelmongenerationsbingo.tasks." + getIdentifier() + ".tooltip";
+    }
 }
