@@ -53,7 +53,9 @@ public class OpenedBingoCardMessage implements IMessage {
 
         @Override
         public IMessage onMessage(OpenedBingoCardMessage message, MessageContext ctx) {
-            Minecraft.getMinecraft().displayGuiScreen(new BingoCardScreen(BingoCardHelper.deserializeTasks(message.card)));
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                Minecraft.getMinecraft().displayGuiScreen(new BingoCardScreen(BingoCardHelper.deserializeTasks(message.card)));
+            });
             return null;
         }
     }

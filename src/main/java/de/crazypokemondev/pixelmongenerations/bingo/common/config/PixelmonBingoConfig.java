@@ -19,6 +19,7 @@ public class PixelmonBingoConfig {
             public static boolean enabled;
             public static boolean allowLegendaries;
             public static boolean allowUltraBeasts;
+            public static boolean allowMissingNo;
             public static List<EnumSpecies> blacklist;
             public static boolean useWhitelist;
             public static List<EnumSpecies> whitelist;
@@ -35,6 +36,9 @@ public class PixelmonBingoConfig {
                 .getBoolean();
         Tasks.CatchPokemon.allowUltraBeasts =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "allowUltraBeasts")
+                .getBoolean();
+        Tasks.CatchPokemon.allowMissingNo =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "allowMissingNo")
                 .getBoolean();
         Tasks.CatchPokemon.blacklist = makeEnumSpeciesList(
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "blacklist")

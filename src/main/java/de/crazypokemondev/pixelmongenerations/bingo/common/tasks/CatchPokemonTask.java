@@ -64,6 +64,9 @@ public class CatchPokemonTask extends BingoTask {
                     speciesPool.remove(s);
                 }
             }
+            if (!PixelmonBingoConfig.Tasks.CatchPokemon.allowMissingNo) {
+                speciesPool.remove(EnumSpecies.MissingNo);
+            }
             for (EnumSpecies s : PixelmonBingoConfig.Tasks.CatchPokemon.blacklist) {
                 speciesPool.remove(s);
             }
