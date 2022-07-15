@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.BingoCardHelper;
+import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
 import de.crazypokemondev.pixelmongenerations.bingo.network.messages.OpenedBingoCardMessage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +40,8 @@ public class BingoCard extends BaseItem {
             if (expirationTime.isBefore(LocalDateTime.now())) {
                 card = BingoCardHelper.generateNewBingoCard();
                 bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
-                bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(LocalDateTime.now().toString());
+                bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(
+                        LocalDateTime.now().plusMinutes(PixelmonBingoConfig.expirationTimer).toString());
                 bingoCardManager.savePlayer(uuid);
             }
             else {

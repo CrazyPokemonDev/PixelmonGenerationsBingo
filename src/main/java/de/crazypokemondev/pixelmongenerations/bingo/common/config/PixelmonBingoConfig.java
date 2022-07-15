@@ -26,6 +26,8 @@ public class PixelmonBingoConfig {
         }
     }
 
+    public static long expirationTimer;
+
     @SuppressWarnings("UnstableApiUsage")
     public static void load(BasicConfigManager configManager) throws ObjectMappingException {
         Tasks.CatchPokemon.enabled =
@@ -51,6 +53,8 @@ public class PixelmonBingoConfig {
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "whitelist")
                 .getList(new TypeToken<String>() {})
         );
+
+        expirationTimer = configManager.getConfigNode(CONFIG_FILE_INDEX, "ExpirationTimer").getLong();
     }
 
     private static List<EnumSpecies> makeEnumSpeciesList(List<String> strings) {
