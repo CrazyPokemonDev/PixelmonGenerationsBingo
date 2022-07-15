@@ -7,7 +7,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,7 +27,7 @@ public class CatchPokemonTask extends BingoTask {
                 .orElseThrow(() -> new IndexOutOfBoundsException("Couldn't find pokemon with national dex id " + dexId));
     }
 
-    public static final String ID = "catch-pokemon";
+    public static final String ID = "catch_pokemon";
     @Override
     public String getIdentifier() {
         return ID;

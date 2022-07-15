@@ -42,12 +42,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                pixelmongenerationsbingo {
-                    resource sourceSets.main.resources
-                }
-            }
         }
         server {
 
@@ -56,17 +50,9 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                pixelmongenerationsbingo {
-                    resource sourceSets.main.resources
-                }
-            }
         }
     }
 }
-
-processResources.outputs.upToDateWhen { false }
 
 repositories {
     flatDir {
