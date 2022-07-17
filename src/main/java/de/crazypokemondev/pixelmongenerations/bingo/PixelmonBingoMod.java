@@ -6,11 +6,13 @@ import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.items.ModItems;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
+import de.crazypokemondev.pixelmongenerations.bingo.proxy.CommonProxy;
 import net.minecraft.command.CommandBase;
 import de.crazypokemondev.pixelmongenerations.bingo.server.commands.Commands;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -28,6 +30,9 @@ public class PixelmonBingoMod
     public static final String MOD_ID = "pixelmongenerationsbingo";
     public static final String NAME = "Pixelmon Bingo";
     public static final String VERSION = "0.0.1";
+    @SidedProxy(clientSide = "de.crazypokemondev.pixelmongenerations.bingo.proxy.ClientProxy",
+            serverSide = "de.crazypokemondev.pixelmongenerations.bingo.proxy.ServerProxy")
+    public static CommonProxy proxy;
     public static BasicConfigManager configManager;
     public static PlayerConfigManager bingoCardManager;
 
@@ -67,9 +72,5 @@ public class PixelmonBingoMod
         for (CommandBase command : Commands.getCommandList()) {
             event.registerServerCommand(command);
         }
-    }
-
-    public void onClient() {
-
     }
 }

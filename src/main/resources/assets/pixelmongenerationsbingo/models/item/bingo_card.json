@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "pixelmongenerationsbingo:items/bingo_card",
+    "layer1": "pixelmongenerationsbingo:items/bingo_card_markings"
+  }
+}
