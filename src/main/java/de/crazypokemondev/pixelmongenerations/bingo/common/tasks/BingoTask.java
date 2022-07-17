@@ -1,5 +1,6 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import de.crazypokemondev.pixelmongenerations.bingo.client.gui.GuiResources;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,15 +12,31 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class BingoTask {
+    private Status status;
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public static final String PARAM_SEPARATOR = ":";
     public static final String TASK_SEPARATOR = ";";
 
+    public BingoTask() {
+        this(Status.Open);
+    }
+
+    public BingoTask(Status status) {
+        this.status = status;
+    }
+
     public abstract String getIdentifier();
 
     /**
-     * Returns a string representation of the task. This should be an identifier for the task type,
-     * followed by any parameters. The identifier and the parameters should each be separated by {@value PARAM_SEPARATOR}.
+     * Returns a string representation of the task. This should be the status of the task (string representation of
+     * {@link Status}), an identifier for the task type, followed by any parameters. The status, identifier and the
+     * parameters should each be separated by {@value PARAM_SEPARATOR}.
      * Cannot contain {@value TASK_SEPARATOR}.
      */
     @Override
@@ -27,18 +44,29 @@ public abstract class BingoTask {
 
     public static BingoTask fromString(String str) {
         String[] parts = str.split(PARAM_SEPARATOR);
+        if (parts.length < 2) throw new IndexOutOfBoundsException("Failed to deserialize BingoTask: found no PARAM_SEPARATOR.");
+
+        Status status = Status.valueOf(parts[0]);
+
         //TaskTypeSwitch
-        switch (parts[0]) {
+        switch (parts[1]) {
             case CatchPokemonTask.ID:
-                return new CatchPokemonTask(parts);
+                return new CatchPokemonTask(status, parts);
             case EmptyTask.ID:
             default:
-                return new EmptyTask();
+                return new EmptyTask(status);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public abstract void drawIcon(GuiScreen screen, int x, int y, int w, int h, float zLevel);
+
+    protected static void drawCheckMarkIcon(GuiScreen screen, int x, int y, int w, int h) {
+        screen.drawTexturedModalRect(
+                x + w - GuiResources.CHECK_ICON_WIDTH, y + h - GuiResources.CHECK_ICON_HEIGHT,
+                GuiResources.CHECK_ICON_X, GuiResources.CHECK_ICON_Y,
+                GuiResources.CHECK_ICON_WIDTH, GuiResources.CHECK_ICON_HEIGHT);
+    }
 
     @NotNull
     public Optional<List<String>> getToolTip() {
@@ -49,5 +77,10 @@ public abstract class BingoTask {
     @NotNull
     public String getTranslateKey() {
         return "gui.pixelmongenerationsbingo.tasks." + getIdentifier() + ".tooltip";
+    }
+
+    public enum Status {
+        Open,
+        Completed
     }
 }

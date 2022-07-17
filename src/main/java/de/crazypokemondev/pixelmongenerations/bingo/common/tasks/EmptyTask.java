@@ -10,6 +10,14 @@ import java.util.Optional;
 public class EmptyTask extends BingoTask {
     public static final String ID = "empty";
 
+    public EmptyTask() {
+        super();
+    }
+
+    public EmptyTask(Status status) {
+        super(status);
+    }
+
     @Override
     public String getIdentifier() {
         return ID;
@@ -17,7 +25,7 @@ public class EmptyTask extends BingoTask {
 
     @Override
     public String toString() {
-        return ID;
+        return getStatus().toString() + PARAM_SEPARATOR + ID;
     }
 
     @Override

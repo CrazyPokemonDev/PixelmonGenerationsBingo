@@ -21,9 +21,10 @@ public class CatchPokemonTask extends BingoTask {
         this.species = species;
     }
 
-    public CatchPokemonTask(String[] params) {
-        if (params.length < 2) throw new IndexOutOfBoundsException("Missing parameter for task of type " + ID);
-        int dexId = Integer.parseInt(params[1]);
+    public CatchPokemonTask(Status status, String[] params) {
+        super(status);
+        if (params.length < 3) throw new IndexOutOfBoundsException("Missing parameter for task of type " + ID);
+        int dexId = Integer.parseInt(params[2]);
         Optional<EnumSpecies> species = EnumSpecies.getFromDex(dexId);
         this.species = species
                 .orElseThrow(() -> new IndexOutOfBoundsException("Couldn't find pokemon with national dex id " + dexId));
@@ -37,7 +38,7 @@ public class CatchPokemonTask extends BingoTask {
 
     @Override
     public String toString() {
-        return ID + BingoTask.PARAM_SEPARATOR + species.getNationalPokedexInteger();
+        return getStatus().toString() + PARAM_SEPARATOR + ID + PARAM_SEPARATOR + species.getNationalPokedexInteger();
     }
 
     @Override
@@ -46,10 +47,18 @@ public class CatchPokemonTask extends BingoTask {
         GuiHelper.bindPokeSprite(species, false, -1, -1);
         GuiHelper.drawImageQuad(x, y, w, h, 0, 0, 1, 1, zLevel);
         screen.mc.getTextureManager().bindTexture(GuiResources.guiIcons);
-        screen.drawTexturedModalRect(
-                x + w - GuiResources.CATCH_POKEMON_ICON_WIDTH, y + h - GuiResources.CATCH_POKEMON_ICON_HEIGHT,
-                GuiResources.CATCH_POKEMON_ICON_X, GuiResources.CATCH_POKEMON_ICON_Y,
-                GuiResources.CATCH_POKEMON_ICON_WIDTH, GuiResources.CATCH_POKEMON_ICON_HEIGHT);
+        switch (getStatus()) {
+            case Completed:
+                drawCheckMarkIcon(screen, x, y, w, h);
+                break;
+            case Open:
+            default:
+                screen.drawTexturedModalRect(
+                        x + w - GuiResources.CATCH_POKEMON_ICON_WIDTH, y + h - GuiResources.CATCH_POKEMON_ICON_HEIGHT,
+                        GuiResources.CATCH_POKEMON_ICON_X, GuiResources.CATCH_POKEMON_ICON_Y,
+                        GuiResources.CATCH_POKEMON_ICON_WIDTH, GuiResources.CATCH_POKEMON_ICON_HEIGHT);
+                break;
+        }
     }
 
     public static CatchPokemonTask getRandomTask() {

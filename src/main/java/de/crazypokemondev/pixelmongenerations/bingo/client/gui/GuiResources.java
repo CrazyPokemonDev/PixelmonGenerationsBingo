@@ -16,4 +16,8 @@ public class GuiResources {
     public static final int CATCH_POKEMON_ICON_Y = 16;
     public static final int CATCH_POKEMON_ICON_HEIGHT = 8;
     public static final int CATCH_POKEMON_ICON_WIDTH = 8;
+    public static final int CHECK_ICON_X = 8;
+    public static final int CHECK_ICON_Y = 16;
+    public static final int CHECK_ICON_HEIGHT = 8;
+    public static final int CHECK_ICON_WIDTH = 8;
 }
