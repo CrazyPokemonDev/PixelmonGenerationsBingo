@@ -1,6 +1,7 @@
 package de.crazypokemondev.pixelmongenerations.bingo.client.gui;
 
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
+import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -8,10 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class BingoCardScreen extends GuiScreen {
     private final Map<Integer, BingoTask> card;
@@ -74,7 +73,9 @@ public class BingoCardScreen extends GuiScreen {
             if (mouseX >= expirationIconX && mouseX < expirationIconX + EXPIRATION_ICON_WIDTH
                     && mouseY >= expirationIconY && mouseY < expirationIconY + EXPIRATION_ICON_HEIGHT) {
                 toolTip = Optional.of(Collections.singletonList(
-                        I18n.format("gui.pixelmongenerationsbingo.expires", expirationTime.toString())));
+                        I18n.format("gui.pixelmongenerationsbingo.expires",
+                                expirationTime.format(DateTimeFormatter.ofPattern(
+                                        PixelmonBingoConfig.Formatting.dateTimeFormat, Locale.getDefault())))));
             }
         }
 

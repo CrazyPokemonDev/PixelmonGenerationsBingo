@@ -28,6 +28,10 @@ public class PixelmonBingoConfig {
 
     public static long expirationTimer;
 
+    public static class Formatting {
+        public static String dateTimeFormat;
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     public static void load(BasicConfigManager configManager) throws ObjectMappingException {
         Tasks.CatchPokemon.enabled =
@@ -55,6 +59,9 @@ public class PixelmonBingoConfig {
         );
 
         expirationTimer = configManager.getConfigNode(CONFIG_FILE_INDEX, "ExpirationTimer").getLong();
+
+        Formatting.dateTimeFormat =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Formatting", "DateTimeFormat").getString();
     }
 
     private static List<EnumSpecies> makeEnumSpeciesList(List<String> strings) {
