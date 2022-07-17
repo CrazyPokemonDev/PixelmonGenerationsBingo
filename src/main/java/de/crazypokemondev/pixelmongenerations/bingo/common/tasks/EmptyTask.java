@@ -1,5 +1,6 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import net.minecraft.client.gui.GuiScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -20,7 +21,7 @@ public class EmptyTask extends BingoTask {
     }
 
     @Override
-    public void drawIcon(int x, int y, int w, int h, float zLevel) {
+    public void drawIcon(GuiScreen screen, int x, int y, int w, int h, float zLevel) {
 
     }
 

@@ -2,7 +2,9 @@ package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
 import com.pixelmongenerations.client.gui.GuiHelper;
 import com.pixelmongenerations.core.enums.EnumSpecies;
+import de.crazypokemondev.pixelmongenerations.bingo.client.gui.GuiResources;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,9 +42,14 @@ public class CatchPokemonTask extends BingoTask {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void drawIcon(int x, int y, int w, int h, float zLevel) {
+    public void drawIcon(GuiScreen screen, int x, int y, int w, int h, float zLevel) {
         GuiHelper.bindPokeSprite(species, false, -1, -1);
         GuiHelper.drawImageQuad(x, y, w, h, 0, 0, 1, 1, zLevel);
+        screen.mc.getTextureManager().bindTexture(GuiResources.guiIcons);
+        screen.drawTexturedModalRect(
+                x + w - GuiResources.CATCH_POKEMON_ICON_WIDTH, y + h - GuiResources.CATCH_POKEMON_ICON_HEIGHT,
+                GuiResources.CATCH_POKEMON_ICON_X, GuiResources.CATCH_POKEMON_ICON_Y,
+                GuiResources.CATCH_POKEMON_ICON_WIDTH, GuiResources.CATCH_POKEMON_ICON_HEIGHT);
     }
 
     public static CatchPokemonTask getRandomTask() {

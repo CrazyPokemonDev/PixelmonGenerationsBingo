@@ -1,5 +1,6 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +38,7 @@ public abstract class BingoTask {
     }
 
     @SideOnly(Side.CLIENT)
-    public abstract void drawIcon(int x, int y, int w, int h, float zLevel);
+    public abstract void drawIcon(GuiScreen screen, int x, int y, int w, int h, float zLevel);
 
     @NotNull
     public Optional<List<String>> getToolTip() {

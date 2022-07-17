@@ -1,11 +1,9 @@
 package de.crazypokemondev.pixelmongenerations.bingo.client.gui;
 
-import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
@@ -25,13 +23,6 @@ public class BingoCardScreen extends GuiScreen {
     public static final int ROW_HEIGHT = 32;
     public static final int EXPIRATION_ICON_OFFSET_X = 229;
     public static final int EXPIRATION_ICON_OFFSET_Y = 226;
-    public static final int EXPIRATION_ICON_WIDTH = 16;
-    public static final int EXPIRATION_ICON_HEIGHT = 16;
-
-    private static final ResourceLocation background =
-            new ResourceLocation(PixelmonBingoMod.MOD_ID, "textures/gui/bingocard.png");
-    private static final ResourceLocation guiIcons =
-            new ResourceLocation(PixelmonBingoMod.MOD_ID, "textures/gui/icons.png");
 
     public BingoCardScreen(Map<Integer, BingoTask> card, @Nullable LocalDateTime expirationTime) {
         this.card = card;
@@ -42,7 +33,7 @@ public class BingoCardScreen extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawWorldBackground(0);
-        mc.getTextureManager().bindTexture(background);
+        mc.getTextureManager().bindTexture(GuiResources.background);
         int x = (width - WIDTH) / 2;
         int y = (height - HEIGHT) / 2;
         drawTexturedModalRect(x, y, 0, 0, WIDTH, HEIGHT);
@@ -54,7 +45,7 @@ public class BingoCardScreen extends GuiScreen {
             if (task == null) continue;
             int iconX = x + GRID_OFFSET_X + col * COL_WIDTH;
             int iconY = y + GRID_OFFSET_Y + row * ROW_HEIGHT;
-            task.drawIcon(iconX, iconY,
+            task.drawIcon(this, iconX, iconY,
                     COL_WIDTH, ROW_HEIGHT, zLevel);
             if (mouseX >= iconX && mouseX < iconX + COL_WIDTH
                     && mouseY >= iconY && mouseY < iconY + ROW_HEIGHT) {
@@ -65,13 +56,14 @@ public class BingoCardScreen extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         if (expirationTime != null) {
-            mc.getTextureManager().bindTexture(guiIcons);
+            mc.getTextureManager().bindTexture(GuiResources.guiIcons);
             int expirationIconX = x + EXPIRATION_ICON_OFFSET_X;
             int expirationIconY = y + EXPIRATION_ICON_OFFSET_Y;
             drawTexturedModalRect(expirationIconX, expirationIconY,
-                    0, 0, EXPIRATION_ICON_WIDTH, EXPIRATION_ICON_HEIGHT);
-            if (mouseX >= expirationIconX && mouseX < expirationIconX + EXPIRATION_ICON_WIDTH
-                    && mouseY >= expirationIconY && mouseY < expirationIconY + EXPIRATION_ICON_HEIGHT) {
+                    GuiResources.EXPIRATION_ICON_X, GuiResources.EXPIRATION_ICON_Y,
+                    GuiResources.EXPIRATION_ICON_WIDTH, GuiResources.EXPIRATION_ICON_HEIGHT);
+            if (mouseX >= expirationIconX && mouseX < expirationIconX + GuiResources.EXPIRATION_ICON_WIDTH
+                    && mouseY >= expirationIconY && mouseY < expirationIconY + GuiResources.EXPIRATION_ICON_HEIGHT) {
                 toolTip = Optional.of(Collections.singletonList(
                         I18n.format("gui.pixelmongenerationsbingo.expires",
                                 expirationTime.format(DateTimeFormatter.ofPattern(
