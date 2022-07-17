@@ -7,6 +7,6 @@ public class BaseItem extends Item {
     public BaseItem(String itemName) {
         super();
         setRegistryName(itemName);
-        setUnlocalizedName(PixelmonBingoMod.MOD_ID + "." + itemName);
+        setTranslationKey(PixelmonBingoMod.MOD_ID + "." + itemName);
     }
 }
