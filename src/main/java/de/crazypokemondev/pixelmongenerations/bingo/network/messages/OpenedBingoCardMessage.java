@@ -9,22 +9,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
 public class OpenedBingoCardMessage implements IMessage {
     public static final Charset CHARSET = StandardCharsets.UTF_8;
     private Map<Integer, String> card;
+    @Nullable
+    private LocalDateTime expirationTime;
+
     public OpenedBingoCardMessage(){}
 
-    public OpenedBingoCardMessage(Map<Integer, String> card) {
+    public OpenedBingoCardMessage(Map<Integer, String> card, @Nullable LocalDateTime expirationTime) {
         this.card = card;
+        this.expirationTime = expirationTime;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
+        if (expirationTime != null) {
+            buf.writeLong(expirationTime.toEpochSecond(ZoneOffset.UTC));
+        }
+        else {
+            buf.writeLong(-1);
+        }
         for (int i = 0; i < 25; i++) {
             buf.writeCharSequence(card.get(i), CHARSET);
             buf.writeCharSequence(BingoTask.TASK_SEPARATOR, CHARSET);
@@ -33,6 +46,12 @@ public class OpenedBingoCardMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        long epochSecond = buf.readLong();
+        if (epochSecond >= 0) {
+            expirationTime = LocalDateTime.ofEpochSecond(epochSecond, 0, ZoneOffset.UTC);
+        } else {
+            expirationTime = null;
+        }
         card = new HashMap<>();
         int i = 0;
         StringBuilder s = new StringBuilder();
@@ -53,9 +72,8 @@ public class OpenedBingoCardMessage implements IMessage {
 
         @Override
         public IMessage onMessage(OpenedBingoCardMessage message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> {
-                Minecraft.getMinecraft().displayGuiScreen(new BingoCardScreen(BingoCardHelper.deserializeTasks(message.card)));
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().displayGuiScreen(
+                    new BingoCardScreen(BingoCardHelper.deserializeTasks(message.card), message.expirationTime)));
             return null;
         }
     }

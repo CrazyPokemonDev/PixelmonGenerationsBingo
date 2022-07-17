@@ -5,4 +5,5 @@ commands.pixelmongenerationsbingo.bingo.usage=/bingo
 item.pixelmongenerationsbingo.bingo_card.name=Bingo Card
 
 # GUI
+gui.pixelmongenerationsbingo.expires=Expires: %s
 gui.pixelmongenerationsbingo.tasks.catch_pokemon.tooltip=Catch one %s

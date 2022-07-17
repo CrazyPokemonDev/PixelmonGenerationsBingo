@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BingoCard extends BaseItem {
@@ -35,13 +36,20 @@ public class BingoCard extends BaseItem {
             UUID uuid = player.getUniqueID();
             bingoCardManager.loadPlayer(uuid);
             String dateTimeString = bingoCardManager.getPlayerConfigNode(uuid, "Expires").getString();
-            LocalDateTime expirationTime = LocalDateTime.parse(dateTimeString);
+            Optional<LocalDateTime> expirationTime = getExpirationTime(dateTimeString);
             Map<Integer, String> card;
-            if (expirationTime.isBefore(LocalDateTime.now())) {
+            if (expirationTime.isPresent() && expirationTime.get().isBefore(LocalDateTime.now())) {
                 card = BingoCardHelper.generateNewBingoCard();
                 bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
-                bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(
-                        LocalDateTime.now().plusMinutes(PixelmonBingoConfig.expirationTimer).toString());
+                if (PixelmonBingoConfig.expirationTimer < 0) {
+                    expirationTime = Optional.empty();
+                    bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue("");
+                } else {
+                    expirationTime = Optional.of(
+                            LocalDateTime.now().plusMinutes(PixelmonBingoConfig.expirationTimer));
+                    bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(
+                            expirationTime.get().toString());
+                }
                 bingoCardManager.savePlayer(uuid);
             }
             else {
@@ -54,8 +62,14 @@ public class BingoCard extends BaseItem {
                     return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
                 }
             }
-            BingoPacketHandler.INSTANCE.sendTo(new OpenedBingoCardMessage(card), player);
+            BingoPacketHandler.INSTANCE.sendTo(
+                    new OpenedBingoCardMessage(card, expirationTime.orElse(null)), player);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+    }
+
+    private Optional<LocalDateTime> getExpirationTime(String dateTimeString) {
+        if (dateTimeString.isEmpty()) return Optional.empty();
+        else return Optional.of(LocalDateTime.parse(dateTimeString));
     }
 }
