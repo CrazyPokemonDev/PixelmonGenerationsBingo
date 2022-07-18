@@ -1,5 +1,6 @@
 package de.crazypokemondev.pixelmongenerations.bingo.network.messages;
 
+import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import de.crazypokemondev.pixelmongenerations.bingo.client.gui.BingoCardScreen;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.BingoCardHelper;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
@@ -72,8 +73,9 @@ public class OpenedBingoCardMessage implements IMessage {
 
         @Override
         public IMessage onMessage(OpenedBingoCardMessage message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().displayGuiScreen(
-                    new BingoCardScreen(BingoCardHelper.deserializeTasks(message.card), message.expirationTime)));
+            // use proxy to avoid classloading client side only class GuiScreen
+            Minecraft.getMinecraft().addScheduledTask(() -> PixelmonBingoMod.proxy
+                    .openBingoCardScreen(BingoCardHelper.deserializeTasks(message.card), message.expirationTime));
             return null;
         }
     }
