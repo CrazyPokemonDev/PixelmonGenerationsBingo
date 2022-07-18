@@ -32,6 +32,11 @@ public class PixelmonBingoConfig {
         public static String dateTimeFormat;
     }
 
+    public static class BingoCard {
+        public static boolean useMagicCard;
+        public static boolean soldByShopkeepers;
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     public static void load(BasicConfigManager configManager) throws ObjectMappingException {
         Tasks.CatchPokemon.enabled =
@@ -62,6 +67,11 @@ public class PixelmonBingoConfig {
 
         Formatting.dateTimeFormat =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Formatting", "DateTimeFormat").getString();
+
+        BingoCard.useMagicCard =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "MagicCard").getBoolean();
+        BingoCard.soldByShopkeepers =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SoldByShopkeepers").getBoolean();
     }
 
     private static List<EnumSpecies> makeEnumSpeciesList(List<String> strings) {

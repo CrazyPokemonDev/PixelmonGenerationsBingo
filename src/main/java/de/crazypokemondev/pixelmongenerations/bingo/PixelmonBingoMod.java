@@ -6,6 +6,7 @@ import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.items.ModItems;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.CaptureListener;
+import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.EntityInteractListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.LoginListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
@@ -69,6 +70,7 @@ public class PixelmonBingoMod
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new LoginListener());
+        MinecraftForge.EVENT_BUS.register(new EntityInteractListener());
     }
 
     @EventHandler

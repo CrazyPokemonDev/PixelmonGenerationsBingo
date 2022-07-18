@@ -16,11 +16,6 @@ public class Bingo extends CommandBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
-    }
-
-    @Override
     public @NotNull String getUsage(@NotNull ICommandSender sender) {
         return "commands.pixelmongenerationsbingo.bingo.usage";
     }
