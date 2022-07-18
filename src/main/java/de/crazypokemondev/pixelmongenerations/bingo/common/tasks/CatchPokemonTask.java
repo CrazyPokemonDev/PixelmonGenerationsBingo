@@ -4,8 +4,13 @@ import com.pixelmongenerations.client.gui.GuiHelper;
 import com.pixelmongenerations.core.enums.EnumSpecies;
 import de.crazypokemondev.pixelmongenerations.bingo.client.gui.GuiResources;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
+import de.crazypokemondev.pixelmongenerations.bingo.common.localization.LocalizationHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentSelector;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +20,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CatchPokemonTask extends BingoTask {
     private final EnumSpecies species;
+    public EnumSpecies getSpecies() {
+        return species;
+    }
+
     private static List<EnumSpecies> speciesPool;
 
     public CatchPokemonTask(EnumSpecies species) {
@@ -61,9 +70,9 @@ public class CatchPokemonTask extends BingoTask {
         }
     }
 
-    public static CatchPokemonTask getRandomTask() {
+    public static CatchPokemonTask getRandomTask(World world) {
         List<EnumSpecies> speciesPool = getSpeciesPool();
-        int index = ThreadLocalRandom.current().nextInt(speciesPool.size());
+        int index = world.rand.nextInt(speciesPool.size());
         return new CatchPokemonTask(speciesPool.get(index));
     }
 
@@ -101,5 +110,13 @@ public class CatchPokemonTask extends BingoTask {
         String translateKey = getTranslateKey();
         String formattedString = I18n.format(translateKey, species.getPokemonName());
         return Optional.of(Collections.singletonList(formattedString));
+    }
+
+    @Override
+    public void completeTask(EntityPlayerMP player) {
+        super.completeTask(player);
+        player.sendMessage(new TextComponentTranslation(
+                "messages.pixelmongenerationsbingo.tasks." + ID + ".completed",
+                new TextComponentTranslation(LocalizationHelper.getSpeciesNameKey(species))));
     }
 }

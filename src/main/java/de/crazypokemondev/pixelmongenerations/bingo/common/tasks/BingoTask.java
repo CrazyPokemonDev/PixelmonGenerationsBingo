@@ -1,8 +1,15 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
+import com.pixelmongenerations.common.entity.pixelmon.drops.DropItemHelper;
 import de.crazypokemondev.pixelmongenerations.bingo.client.gui.GuiResources;
+import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +84,25 @@ public abstract class BingoTask {
     @NotNull
     public String getTranslateKey() {
         return "gui.pixelmongenerationsbingo.tasks." + getIdentifier() + ".tooltip";
+    }
+
+    public void completeTask(EntityPlayerMP player) {
+        setStatus(Status.Completed);
+        if (player.world.isRemote) return;
+        LootTable table = player.world.getLootTableManager().getLootTableFromLocation(LootTables.singleTaskLootTable);
+        LootContext ctx = new LootContext.Builder((WorldServer) player.world)
+                .withPlayer(player)
+                .withLuck(player.getLuck()).build();
+        List<ItemStack> stacks = table.generateLootForPools(player.world.rand, ctx);
+        for (ItemStack stack : stacks) {
+            if (!player.addItemStackToInventory(stack)) {
+                DropItemHelper.dropItemOnGround(player, stack, false, false);
+            }
+        }
+    }
+
+    public boolean isCompleted() {
+        return status == Status.Completed;
     }
 
     public enum Status {

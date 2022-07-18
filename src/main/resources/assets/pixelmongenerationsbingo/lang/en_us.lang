@@ -7,3 +7,11 @@ item.pixelmongenerationsbingo.bingo_card.name=Bingo Card
 # GUI
 gui.pixelmongenerationsbingo.expires=Expires: %s
 gui.pixelmongenerationsbingo.tasks.catch_pokemon.tooltip=Catch one %s
+
+# Messages
+messages.pixelmongenerationsbingo.bingo_1=Bingo!
+messages.pixelmongenerationsbingo.bingo_2=Double Bingo!
+messages.pixelmongenerationsbingo.bingo_3=Triple Bingo!
+messages.pixelmongenerationsbingo.bingo_4=Quadruple Bingo!
+messages.pixelmongenerationsbingo.bingo_card_completed=Bingo card completed!
+messages.pixelmongenerationsbingo.tasks.catch_pokemon.completed=You completed a task by catching %s!

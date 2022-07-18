@@ -39,7 +39,7 @@ public class BingoCard extends BaseItem {
             Optional<LocalDateTime> expirationTime = getExpirationTime(dateTimeString);
             Map<Integer, String> card;
             if (expirationTime.isPresent() && expirationTime.get().isBefore(LocalDateTime.now())) {
-                card = BingoCardHelper.generateNewBingoCard();
+                card = BingoCardHelper.generateNewBingoCard(worldIn);
                 bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
                 if (PixelmonBingoConfig.expirationTimer < 0) {
                     expirationTime = Optional.empty();

@@ -5,6 +5,8 @@ import com.lypaka.lypakautils.ConfigurationLoaders.ConfigUtils;
 import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.items.ModItems;
+import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.CaptureListener;
+import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
 import de.crazypokemondev.pixelmongenerations.bingo.proxy.CommonProxy;
 import net.minecraft.command.CommandBase;
@@ -13,7 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -56,15 +58,12 @@ public class PixelmonBingoMod
         configManager = new BasicConfigManager(files, dir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
         configManager.init();
         PixelmonBingoConfig.load(configManager);
+
         bingoCardManager = new PlayerConfigManager("card.conf", "player-cards",
                 dir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
         bingoCardManager.init();
-    }
 
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-
+        LootTables.registerAll();
     }
 
     @EventHandler
@@ -72,5 +71,6 @@ public class PixelmonBingoMod
         for (CommandBase command : Commands.getCommandList()) {
             event.registerServerCommand(command);
         }
+        MinecraftForge.EVENT_BUS.register(new CaptureListener());
     }
 }

@@ -1,5 +1,6 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.items;
 
+import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -7,7 +8,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod.EventBusSubscriber
 public class ModItems {
     public static BingoCard BINGO_CARD = new BingoCard();
 
