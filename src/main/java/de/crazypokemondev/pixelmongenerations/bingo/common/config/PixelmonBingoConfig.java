@@ -35,6 +35,8 @@ public class PixelmonBingoConfig {
     public static class BingoCard {
         public static boolean useMagicCard;
         public static boolean soldByShopkeepers;
+        public static int buyPrice;
+        public static int sellPrice;
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -72,6 +74,10 @@ public class PixelmonBingoConfig {
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "MagicCard").getBoolean();
         BingoCard.soldByShopkeepers =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SoldByShopkeepers").getBoolean();
+        BingoCard.buyPrice =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "BuyPrice").getInt();
+        BingoCard.sellPrice =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SellPrice").getInt();
     }
 
     private static List<EnumSpecies> makeEnumSpeciesList(List<String> strings) {

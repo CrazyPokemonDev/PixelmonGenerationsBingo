@@ -3,10 +3,12 @@ commands.pixelmongenerationsbingo.bingo.usage=/bingo
 
 # Items
 item.pixelmongenerationsbingo.bingo_card.name=Bingo Card
+item.pixelmongenerationsbingo.bingo_card.magic=$cMagic!$r
 
 # GUI
 gui.pixelmongenerationsbingo.expires=Expires: %s
 gui.pixelmongenerationsbingo.tasks.catch_pokemon.tooltip=Catch one %s
+gui.shopkeeper.item.bingo_card=A bingo card filled with tasks to complete to obtain rewards. Bingos and completed cards yield additional rewards.
 
 # Messages
 messages.pixelmongenerationsbingo.bingo_1=Bingo!

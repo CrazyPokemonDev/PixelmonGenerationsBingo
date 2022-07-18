@@ -10,6 +10,10 @@ import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.CatchPokemonTas
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.EmptyTask;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -61,11 +65,11 @@ public class BingoCardHelper {
         return result;
     }
 
-    public static void checkForBingo(int slot, EntityPlayerMP player) throws ObjectMappingException {
-        PlayerConfigManager bingoCardManager = PixelmonBingoMod.bingoCardManager;
-        @SuppressWarnings("UnstableApiUsage")
-        Map<Integer, BingoTask> card = BingoCardHelper.deserializeTasks(bingoCardManager.getPlayerConfigNode(
-                player.getUniqueID(), "Card").getValue(new TypeToken<Map<Integer, String>>() {}));
+    public static Map<Integer, BingoTask> deserializeTasks(NBTTagList card) {
+        return deserializeTasks(nbtToMap(card));
+    }
+
+    public static void checkForBingo(int slot, EntityPlayerMP player, Map<Integer, BingoTask> card) {
         boolean cardCompleted = true;
         boolean rowCompleted = true;
         boolean colCompleted = true;
@@ -123,5 +127,31 @@ public class BingoCardHelper {
 
     public static boolean isCardCompleted(Map<Integer, String> card) {
         return deserializeTasks(card).entrySet().stream().allMatch(entry -> entry.getValue().isCompleted());
+    }
+
+    public static boolean isCardCompleted(NBTTagList card) {
+        for (int i = 0; i < 25; i++) {
+            String str = card.getStringTagAt(i);
+            if (!BingoTask.fromString(str).isCompleted()) return false;
+        }
+        return true;
+    }
+
+    public static NBTTagList generateNewBingoCardNbt(World world) {
+        NBTTagList list = new NBTTagList();
+        Map<Integer, String> card = generateNewBingoCard(world);
+        for (int i = 0; i < 25; i++) {
+            NBTTagString nbt = new NBTTagString(card.get(i));
+            list.appendTag(nbt);
+        }
+        return list;
+    }
+
+    public static Map<Integer, String> nbtToMap(NBTTagList card) {
+        Map<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < 25; i++) {
+            map.put(i, card.getStringTagAt(i));
+        }
+        return map;
     }
 }

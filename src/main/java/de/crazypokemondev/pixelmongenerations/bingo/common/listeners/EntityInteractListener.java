@@ -23,7 +23,8 @@ public class EntityInteractListener {
             if (shopkeeper.getItemList().stream().anyMatch(item -> item.getItem().getItem() instanceof BingoCard))
                 return;
             ItemStack stack = new ItemStack(ModItems.BINGO_CARD, 1);
-            BaseShopItem base = new BaseShopItem(PixelmonBingoMod.MOD_ID + ":bingo_card", stack, 100, 0);
+            BaseShopItem base = new BaseShopItem(PixelmonBingoMod.MOD_ID + ":bingo_card", stack,
+                    PixelmonBingoConfig.BingoCard.buyPrice, PixelmonBingoConfig.BingoCard.sellPrice);
             ShopItem shopItem = new ShopItem(base, 1, 100, false);
             ShopItemWithVariation shopItemWithVariation = new ShopItemWithVariation(shopItem, 1);
             shopkeeper.getItemList().add(shopItemWithVariation);

@@ -6,6 +6,8 @@ import de.crazypokemondev.pixelmongenerations.bingo.common.config.BingoCardHelpe
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -29,6 +31,10 @@ public class OpenedBingoCardMessage implements IMessage {
     public OpenedBingoCardMessage(Map<Integer, String> card, @Nullable LocalDateTime expirationTime) {
         this.card = card;
         this.expirationTime = expirationTime;
+    }
+
+    public OpenedBingoCardMessage(NBTTagList card, @Nullable LocalDateTime expirationTime) {
+        this(BingoCardHelper.nbtToMap(card), expirationTime);
     }
 
     @Override
