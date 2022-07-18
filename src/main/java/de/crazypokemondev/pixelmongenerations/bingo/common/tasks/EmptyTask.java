@@ -1,10 +1,8 @@
 package de.crazypokemondev.pixelmongenerations.bingo.common.tasks;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayerMP;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
