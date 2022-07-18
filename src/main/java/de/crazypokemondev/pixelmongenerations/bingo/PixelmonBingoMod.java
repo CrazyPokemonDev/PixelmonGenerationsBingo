@@ -35,7 +35,7 @@ public class PixelmonBingoMod
 {
     public static final String MOD_ID = "pixelmongenerationsbingo";
     public static final String NAME = "Pixelmon Bingo";
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.1.0";
     @SidedProxy(clientSide = "de.crazypokemondev.pixelmongenerations.bingo.proxy.ClientProxy",
             serverSide = "de.crazypokemondev.pixelmongenerations.bingo.proxy.ServerProxy")
     public static CommonProxy proxy;

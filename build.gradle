@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.0.1'
+version = '0.1.0'
 group = 'de.crazypokemondev.pixelmongenerations.bingo' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'pixelmongenerationsbingo'
 
@@ -153,3 +153,5 @@ tasks.create("copyResourceToClasses", Copy.class) {
     // into("$buildDir/classes/kotlin/main")
     from(tasks.processResources.destinationDir)
 }
+
+
