@@ -6,6 +6,7 @@ import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.items.ModItems;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.CaptureListener;
+import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.LoginListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
 import de.crazypokemondev.pixelmongenerations.bingo.proxy.CommonProxy;
@@ -15,8 +16,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +40,7 @@ public class PixelmonBingoMod
     public static CommonProxy proxy;
     public static BasicConfigManager configManager;
     public static PlayerConfigManager bingoCardManager;
+    private final Path configDir;
 
     public static Logger LOGGER;
 
@@ -44,6 +49,7 @@ public class PixelmonBingoMod
 
     public PixelmonBingoMod() {
         MinecraftForge.EVENT_BUS.register(new ModItems());
+        configDir = ConfigUtils.checkDir(Paths.get("./config/" + MOD_ID));
     }
 
     @EventHandler
@@ -52,21 +58,26 @@ public class PixelmonBingoMod
 
         BingoPacketHandler.registerMessages();
 
-        Path dir = ConfigUtils.checkDir(Paths.get("./config/" + MOD_ID));
         String[] files = new String[]{"pixelmonbingo.conf"};
-        configManager = new BasicConfigManager(files, dir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
+        configManager = new BasicConfigManager(files, configDir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
         configManager.init();
         PixelmonBingoConfig.load(configManager);
-
-        bingoCardManager = new PlayerConfigManager("card.conf", "player-cards",
-                dir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
-        bingoCardManager.init();
 
         LootTables.registerAll();
     }
 
     @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new LoginListener());
+    }
+
+    @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
+        bingoCardManager = new PlayerConfigManager("card.conf",
+                "cards-" + event.getServer().getFolderName(),
+                configDir, PixelmonBingoMod.class, NAME, MOD_ID, LOGGER);
+        bingoCardManager.init();
+
         for (CommandBase command : Commands.getCommandList()) {
             event.registerServerCommand(command);
         }

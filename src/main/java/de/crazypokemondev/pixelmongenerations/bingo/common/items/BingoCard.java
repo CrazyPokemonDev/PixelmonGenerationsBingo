@@ -34,7 +34,6 @@ public class BingoCard extends BaseItem {
             EntityPlayerMP player = (EntityPlayerMP) playerIn;
             PlayerConfigManager bingoCardManager = PixelmonBingoMod.bingoCardManager;
             UUID uuid = player.getUniqueID();
-            bingoCardManager.loadPlayer(uuid);
             String dateTimeString = bingoCardManager.getPlayerConfigNode(uuid, "Expires").getString();
             Optional<LocalDateTime> expirationTime = getExpirationTime(dateTimeString);
             Map<Integer, String> card;
