@@ -7,7 +7,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class BingoPacketHandler {
-    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(PixelmonBingoMod.MOD_ID);
+    public static final String NETWORK_CHANNEL_ID = "pg-bingo";
+    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(NETWORK_CHANNEL_ID);
     public static int id = 0;
 
     public static void registerMessages() {
