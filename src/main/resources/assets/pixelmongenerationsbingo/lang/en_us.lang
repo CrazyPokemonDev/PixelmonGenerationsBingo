@@ -3,7 +3,7 @@ commands.pixelmongenerationsbingo.bingo.usage=/bingo
 
 # Items
 item.pixelmongenerationsbingo.bingo_card.name=Bingo Card
-item.pixelmongenerationsbingo.bingo_card.magic=$cMagic!$r
+item.pixelmongenerationsbingo.bingo_card.magic=&cMagic!&r
 
 # GUI
 gui.pixelmongenerationsbingo.expires=Expires: %s

@@ -8,6 +8,7 @@ import de.crazypokemondev.pixelmongenerations.bingo.common.config.BingoCardHelpe
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
 import de.crazypokemondev.pixelmongenerations.bingo.network.messages.OpenedBingoCardMessage;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +46,7 @@ public class BingoCard extends BaseItem {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         NBTTagCompound nbt = stack.getTagCompound();
         if (nbt != null && nbt.getBoolean("isMagic")) {
-            tooltip.add(FancyText.getFormattedString("item.pixelmongenerationsbingo.bingo_card.magic"));
+            tooltip.add(FancyText.getFormattedString(I18n.format("item.pixelmongenerationsbingo.bingo_card.magic")));
         }
     }
 
