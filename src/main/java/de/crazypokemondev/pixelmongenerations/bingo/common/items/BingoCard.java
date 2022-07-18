@@ -41,22 +41,19 @@ public class BingoCard extends BaseItem {
             if (expirationTime.isPresent() && expirationTime.get().isBefore(LocalDateTime.now())) {
                 card = BingoCardHelper.generateNewBingoCard(worldIn);
                 bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
-                if (PixelmonBingoConfig.expirationTimer < 0) {
-                    expirationTime = Optional.empty();
-                    bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue("");
-                } else {
-                    expirationTime = Optional.of(
-                            LocalDateTime.now().plusMinutes(PixelmonBingoConfig.expirationTimer));
-                    bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(
-                            expirationTime.get().toString());
-                }
+                expirationTime = setExpirationTimer(bingoCardManager, uuid);
                 bingoCardManager.savePlayer(uuid);
-            }
-            else {
+            } else {
                 try {
                     //noinspection UnstableApiUsage
                     card = bingoCardManager.getPlayerConfigNode(uuid, "Card")
                             .getValue(new TypeToken<Map<Integer, String>>() {});
+                    if (!expirationTime.isPresent() && BingoCardHelper.isCardCompleted(card)) {
+                        card = BingoCardHelper.generateNewBingoCard(worldIn);
+                        bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
+                        expirationTime = setExpirationTimer(bingoCardManager, uuid);
+                        bingoCardManager.savePlayer(uuid);
+                    }
                 } catch (ObjectMappingException e) {
                     PixelmonBingoMod.LOGGER.error("Failed to read bingo card from config file!");
                     return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
@@ -66,6 +63,21 @@ public class BingoCard extends BaseItem {
                     new OpenedBingoCardMessage(card, expirationTime.orElse(null)), player);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+    }
+
+    @NotNull
+    private Optional<LocalDateTime> setExpirationTimer(PlayerConfigManager bingoCardManager, UUID uuid) {
+        Optional<LocalDateTime> expirationTime;
+        if (PixelmonBingoConfig.expirationTimer < 0) {
+            expirationTime = Optional.empty();
+            bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue("");
+        } else {
+            expirationTime = Optional.of(
+                    LocalDateTime.now().plusMinutes(PixelmonBingoConfig.expirationTimer));
+            bingoCardManager.getPlayerConfigNode(uuid, "Expires").setValue(
+                    expirationTime.get().toString());
+        }
+        return expirationTime;
     }
 
     private Optional<LocalDateTime> getExpirationTime(String dateTimeString) {

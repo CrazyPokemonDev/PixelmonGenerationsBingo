@@ -120,4 +120,8 @@ public class BingoCardHelper {
                 "messages.pixelmongenerationsbingo.bingo_card_completed").setStyle(
                         new Style().setColor(TextFormatting.GREEN)));
     }
+
+    public static boolean isCardCompleted(Map<Integer, String> card) {
+        return deserializeTasks(card).entrySet().stream().allMatch(entry -> entry.getValue().isCompleted());
+    }
 }
