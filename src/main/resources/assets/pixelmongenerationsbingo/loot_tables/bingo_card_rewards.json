@@ -1,7 +1,7 @@
 {
   "pools":[
     {
-      "name":"reward",
+      "name":"pixelmongenerationsbingo:bingo_card_reward",
       "rolls":5,
       "entries":[
         {
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "name":"candy",
+      "name":"pixelmongenerationsbingo:bingo_card_reward_candy",
       "rolls":3,
       "entries":[
         {

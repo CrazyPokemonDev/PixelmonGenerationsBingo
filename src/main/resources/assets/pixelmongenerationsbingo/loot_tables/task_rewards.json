@@ -1,7 +1,7 @@
 {
   "pools":[
     {
-      "name":"reward",
+      "name":"pixelmongenerationsbingo:task_reward",
       "rolls":1,
       "entries":[
         {
