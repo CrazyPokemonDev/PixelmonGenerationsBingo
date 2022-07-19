@@ -11,8 +11,8 @@ import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.LoginListen
 import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import de.crazypokemondev.pixelmongenerations.bingo.network.BingoPacketHandler;
 import de.crazypokemondev.pixelmongenerations.bingo.proxy.CommonProxy;
-import net.minecraft.command.CommandBase;
 import de.crazypokemondev.pixelmongenerations.bingo.server.commands.Commands;
+import net.minecraft.command.CommandBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -20,8 +20,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.apache.logging.log4j.Logger;
 

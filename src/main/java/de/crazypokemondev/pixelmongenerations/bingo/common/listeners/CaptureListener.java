@@ -31,9 +31,9 @@ public class CaptureListener {
         EntityPixelmon pokemon = event.getPokemon();
         EntityPlayerMP player = event.getPlayer();
         boolean handleMagic = false;
-        for (ItemStack stack : player.inventory.mainInventory.stream().filter(
-                stack -> stack.getItem() instanceof BingoCard).collect(Collectors.toList())) {
-            int inventorySlot = player.inventory.getSlotFor(stack);
+        for (int inventorySlot = 0; inventorySlot < player.inventory.getSizeInventory(); inventorySlot++) {
+            ItemStack stack = player.inventory.getStackInSlot(inventorySlot);
+            if (!(stack.getItem() instanceof BingoCard)) continue;
             NBTTagCompound nbt = stack.getTagCompound();
             if (nbt == null) continue;
             if (nbt.getBoolean("isMagic")) {
@@ -62,7 +62,8 @@ public class CaptureListener {
             CommentedConfigurationNode configNodeCard = bingoCardManager.getPlayerConfigNode(playerUuid, "Card");
             if (configNodeCard == null) return;
             @SuppressWarnings("UnstableApiUsage")
-            Map<Integer, String> rawCard = configNodeCard.getValue(new TypeToken<Map<Integer, String>>() {});
+            Map<Integer, String> rawCard = configNodeCard.getValue(new TypeToken<Map<Integer, String>>() {
+            });
             Map<Integer, BingoTask> card = BingoCardHelper.deserializeTasks(rawCard);
             for (int i = 0; i < 25; i++) {
                 if (card.get(i).isCompleted() || !(card.get(i) instanceof CatchPokemonTask)) continue;

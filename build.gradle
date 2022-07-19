@@ -153,5 +153,3 @@ tasks.create("copyResourceToClasses", Copy.class) {
     // into("$buildDir/classes/kotlin/main")
     from(tasks.processResources.destinationDir)
 }
-
-
