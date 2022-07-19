@@ -21,7 +21,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class CaptureListener {
     @SubscribeEvent
