@@ -55,6 +55,7 @@ public class PixelmonBingoMod
     public void preInit(FMLPreInitializationEvent event) throws IOException, ObjectMappingException {
         LOGGER = event.getModLog();
 
+        BingoPacketHandler.registerChannel();
         BingoPacketHandler.registerMessages();
 
         String[] files = new String[]{"pixelmonbingo.conf"};
