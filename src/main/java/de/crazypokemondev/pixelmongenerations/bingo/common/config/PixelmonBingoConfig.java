@@ -7,9 +7,10 @@ import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
 import net.minecraft.item.Item;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PixelmonBingoConfig {
 
@@ -49,6 +50,9 @@ public class PixelmonBingoConfig {
 
     @SuppressWarnings("UnstableApiUsage")
     public static void load(BasicConfigManager configManager) throws ObjectMappingException {
+        int version = configManager.getConfigNode(CONFIG_FILE_INDEX, "Version").getInt(1);
+        applyMigrations(configManager, version);
+
         Tasks.CatchPokemon.enabled =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "enabled")
                 .getBoolean(true);
@@ -148,5 +152,27 @@ public class PixelmonBingoConfig {
         }
         return list;
     }
+
+    private static void applyMigrations(BasicConfigManager configManager, int currentVersion) {
+        if (migrations.containsKey(currentVersion)) {
+            migrations.get(currentVersion).accept(configManager);
+        }
+        configManager.save();
+    }
+
+    private static final Map<Integer, Consumer<BasicConfigManager>> migrations = Stream.of(
+            new AbstractMap.SimpleEntry<Integer, Consumer<BasicConfigManager>>(1, configManager -> {
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "enabled").setValue(true);
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "weight").setValue(1);
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "items").setValue(
+                        Arrays.asList("pixelmon:dive_ball", "pixelmon:dusk_ball", "pixelmon:fast_ball",
+                                "pixelmon:friend_ball", "pixelmon:great_ball", "pixelmon:heal_ball",
+                                "pixelmon:heavy_ball", "pixelmon:level_ball", "pixelmon:love_ball", "pixelmon:lure_ball",
+                                "pixelmon:luxury_ball", "pixelmon:moon_ball", "pixelmon:nest_ball", "pixelmon:net_ball",
+                                "pixelmon:poke_ball", "pixelmon:premier_ball", "pixelmon:quick_ball",
+                                "pixelmon:repeat_ball", "pixelmon:safari_ball", "pixelmon:sport_ball",
+                                "pixelmon:timer_ball", "pixelmon:ultra_ball"));
+            })
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 }
