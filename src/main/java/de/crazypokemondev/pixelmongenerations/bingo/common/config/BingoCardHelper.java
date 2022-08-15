@@ -4,13 +4,14 @@ import com.google.common.reflect.TypeToken;
 import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import com.pixelmongenerations.common.entity.pixelmon.drops.DropItemHelper;
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
+import de.crazypokemondev.pixelmongenerations.bingo.common.items.BingoCard;
 import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.BingoTask;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.CatchPokemonTask;
+import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.CraftItemTask;
 import de.crazypokemondev.pixelmongenerations.bingo.common.tasks.EmptyTask;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -21,12 +22,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.util.Constants;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class BingoCardHelper {
 
@@ -39,22 +41,41 @@ public class BingoCardHelper {
     }
 
     private static BingoTask getRandomTask(World world) {
-        List<String> types = new ArrayList<>();
+        Map<String, Integer> types = new HashMap<>();
         //TaskTypeSwitch
         if (PixelmonBingoConfig.Tasks.CatchPokemon.enabled)
-            types.add(CatchPokemonTask.ID);
+            types.put(CatchPokemonTask.ID, PixelmonBingoConfig.Tasks.CatchPokemon.weight);
+        if (PixelmonBingoConfig.Tasks.CraftItem.enabled)
+            types.put(CraftItemTask.ID, PixelmonBingoConfig.Tasks.CraftItem.weight);
         if (types.size() < 1) {
             return new EmptyTask();
         }
 
-        int index = world.rand.nextInt(types.size());
-        //TaskTypeSwitch
-        switch (types.get(index)) {
-            case CatchPokemonTask.ID:
-                return CatchPokemonTask.getRandomTask(world);
-            default:
-                return new EmptyTask();
+        int index = world.rand.nextInt(getTotalWeight(types));
+        for (Map.Entry<String, Integer> entry : types.entrySet()) {
+            if (index < entry.getValue()) {
+                //TaskTypeSwitch
+                switch(entry.getKey()) {
+                    case CatchPokemonTask.ID:
+                        return CatchPokemonTask.getRandomTask(world);
+                    case CraftItemTask.ID:
+                        return CraftItemTask.getRandomTask(world);
+                    default:
+                        return new EmptyTask();
+                }
+            }
+            else
+                index -= entry.getValue();
         }
+        return new EmptyTask();
+    }
+
+    private static int getTotalWeight(Map<String, Integer> map) {
+        int sum = 0;
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            sum += entry.getValue();
+        }
+        return sum;
     }
 
     public static Map<Integer, BingoTask> deserializeTasks(Map<Integer, String> card) {
@@ -129,14 +150,6 @@ public class BingoCardHelper {
         return deserializeTasks(card).entrySet().stream().allMatch(entry -> entry.getValue().isCompleted());
     }
 
-    public static boolean isCardCompleted(NBTTagList card) {
-        for (int i = 0; i < 25; i++) {
-            String str = card.getStringTagAt(i);
-            if (!BingoTask.fromString(str).isCompleted()) return false;
-        }
-        return true;
-    }
-
     public static NBTTagList generateNewBingoCardNbt(World world) {
         NBTTagList list = new NBTTagList();
         Map<Integer, String> card = generateNewBingoCard(world);
@@ -153,5 +166,57 @@ public class BingoCardHelper {
             map.put(i, card.getStringTagAt(i));
         }
         return map;
+    }
+
+    public static <T extends BingoTask> void handleFirstIncompleteTask(Class<T> type, EntityPlayerMP player, Predicate<T> predicate, Consumer<T> handler) throws ObjectMappingException {
+        PlayerConfigManager bingoCardManager = PixelmonBingoMod.bingoCardManager;
+        boolean handleMagic = false;
+        for (int inventorySlot = 0; inventorySlot < player.inventory.getSizeInventory(); inventorySlot++) {
+            ItemStack stack = player.inventory.getStackInSlot(inventorySlot);
+            if (!(stack.getItem() instanceof BingoCard)) continue;
+            NBTTagCompound nbt = stack.getTagCompound();
+            if (nbt == null) continue;
+            if (nbt.getBoolean("isMagic")) {
+                handleMagic = true;
+            } else if (nbt.hasKey("card")) {
+                NBTTagList nbtTagList = nbt.getTagList("card", Constants.NBT.TAG_STRING);
+                Map<Integer, BingoTask> card = BingoCardHelper.deserializeTasks(nbtTagList);
+                for (int i = 0; i < 25; i++) {
+                    if (card.get(i).isCompleted() || !(type.isInstance(card.get(i)))) continue;
+                    T task = type.cast(card.get(i));
+                    if (predicate.test(task)) {
+                        handler.accept(task);
+                        nbtTagList.set(i, new NBTTagString(task.toString()));
+                        nbt.setTag("card", nbtTagList);
+                        stack.setTagCompound(nbt);
+                        player.inventory.setInventorySlotContents(inventorySlot, stack);
+                        checkForBingo(i, player, card);
+                        return;
+                    }
+                }
+            }
+        }
+        if (handleMagic) {
+            UUID playerUuid = player.getUniqueID();
+
+            CommentedConfigurationNode configNodeCard = bingoCardManager.getPlayerConfigNode(playerUuid, "Card");
+            if (configNodeCard == null) return;
+            @SuppressWarnings("UnstableApiUsage")
+            Map<Integer, String> rawCard = configNodeCard.getValue(new TypeToken<Map<Integer, String>>() {
+            });
+            Map<Integer, BingoTask> card = BingoCardHelper.deserializeTasks(rawCard);
+            for (int i = 0; i < 25; i++) {
+                if (card.get(i).isCompleted() || !(type.isInstance(card.get(i)))) continue;
+                T task = type.cast(card.get(i));
+                if (predicate.test(task)) {
+                    handler.accept(task);
+                    rawCard.put(i, task.toString());
+                    configNodeCard.setValue(rawCard);
+                    bingoCardManager.savePlayer(playerUuid);
+                    checkForBingo(i, player, card);
+                    return;
+                }
+            }
+        }
     }
 }

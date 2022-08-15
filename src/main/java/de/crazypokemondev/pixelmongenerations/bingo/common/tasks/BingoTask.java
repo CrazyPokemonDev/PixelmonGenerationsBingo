@@ -59,6 +59,8 @@ public abstract class BingoTask {
         switch (parts[1]) {
             case CatchPokemonTask.ID:
                 return new CatchPokemonTask(status, parts);
+            case CraftItemTask.ID:
+                return new CraftItemTask(status, parts);
             case EmptyTask.ID:
             default:
                 return new EmptyTask(status);

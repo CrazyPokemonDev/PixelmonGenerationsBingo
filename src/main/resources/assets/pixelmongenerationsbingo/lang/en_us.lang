@@ -8,6 +8,7 @@ item.pixelmongenerationsbingo.bingo_card.magic=&cMagic!&r
 # GUI
 gui.pixelmongenerationsbingo.expires=Expires: %s
 gui.pixelmongenerationsbingo.tasks.catch_pokemon.tooltip=Catch one %s
+gui.pixelmongenerationsbingo.tasks.craft_item.tooltip=Craft one %s
 gui.shopkeeper.item.pixelmongenerationsbingo.bingo_card=A bingo card filled with tasks to complete to obtain rewards. Bingos and completed cards yield additional rewards.
 
 # Messages
@@ -17,3 +18,4 @@ messages.pixelmongenerationsbingo.bingo_3=Triple Bingo!
 messages.pixelmongenerationsbingo.bingo_4=Quadruple Bingo!
 messages.pixelmongenerationsbingo.bingo_card_completed=Bingo card completed!
 messages.pixelmongenerationsbingo.tasks.catch_pokemon.completed=You completed a task by catching %s!
+messages.pixelmongenerationsbingo.tasks.craft_item.completed=You completed a task by crafting %s!

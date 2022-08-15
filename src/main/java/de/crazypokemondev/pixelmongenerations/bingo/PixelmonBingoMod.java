@@ -6,6 +6,7 @@ import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import de.crazypokemondev.pixelmongenerations.bingo.common.config.PixelmonBingoConfig;
 import de.crazypokemondev.pixelmongenerations.bingo.common.items.ModItems;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.CaptureListener;
+import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.CraftingListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.EntityInteractListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.listeners.LoginListener;
 import de.crazypokemondev.pixelmongenerations.bingo.common.loot.LootTables;
@@ -43,9 +44,6 @@ public class PixelmonBingoMod
 
     public static Logger LOGGER;
 
-    @Mod.Instance
-    public static PixelmonBingoMod INSTANCE;
-
     public PixelmonBingoMod() {
         MinecraftForge.EVENT_BUS.register(new ModItems());
         configDir = ConfigUtils.checkDir(Paths.get("./config/" + MOD_ID));
@@ -67,9 +65,10 @@ public class PixelmonBingoMod
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) throws ObjectMappingException {
         MinecraftForge.EVENT_BUS.register(new LoginListener());
         MinecraftForge.EVENT_BUS.register(new EntityInteractListener());
+        PixelmonBingoConfig.loadPostInit(configManager);
     }
 
     @EventHandler
@@ -83,5 +82,6 @@ public class PixelmonBingoMod
             event.registerServerCommand(command);
         }
         MinecraftForge.EVENT_BUS.register(new CaptureListener());
+        MinecraftForge.EVENT_BUS.register(new CraftingListener());
     }
 }

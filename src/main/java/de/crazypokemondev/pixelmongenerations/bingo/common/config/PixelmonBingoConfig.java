@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.pixelmongenerations.core.enums.EnumSpecies;
 import de.crazypokemondev.pixelmongenerations.bingo.PixelmonBingoMod;
+import net.minecraft.item.Item;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.util.ArrayList;
@@ -17,12 +18,19 @@ public class PixelmonBingoConfig {
     public static class Tasks {
         public static class CatchPokemon {
             public static boolean enabled;
+            public static int weight;
             public static boolean allowLegendaries;
             public static boolean allowUltraBeasts;
             public static boolean allowMissingNo;
             public static List<EnumSpecies> blacklist;
             public static boolean useWhitelist;
             public static List<EnumSpecies> whitelist;
+        }
+
+        public static class CraftItem {
+            public static boolean enabled;
+            public static int weight;
+            public static List<Item> items;
         }
     }
 
@@ -43,41 +51,64 @@ public class PixelmonBingoConfig {
     public static void load(BasicConfigManager configManager) throws ObjectMappingException {
         Tasks.CatchPokemon.enabled =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "enabled")
-                .getBoolean();
+                .getBoolean(true);
+        Tasks.CatchPokemon.weight =
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "weight")
+                .getInt(4);
         Tasks.CatchPokemon.allowLegendaries =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "allowLegendaries")
-                .getBoolean();
+                .getBoolean(false);
         Tasks.CatchPokemon.allowUltraBeasts =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "allowUltraBeasts")
-                .getBoolean();
+                .getBoolean(false);
         Tasks.CatchPokemon.allowMissingNo =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "allowMissingNo")
-                .getBoolean();
+                .getBoolean(false);
         Tasks.CatchPokemon.blacklist = makeEnumSpeciesList(
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "blacklist")
-                .getList(new TypeToken<String>() {})
+                .getList(new TypeToken<String>() {}, new ArrayList<>())
         );
         Tasks.CatchPokemon.useWhitelist =
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "useWhitelist")
-                .getBoolean();
+                .getBoolean(false);
         Tasks.CatchPokemon.whitelist = makeEnumSpeciesList(
                 configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CatchPokemon", "whitelist")
-                .getList(new TypeToken<String>() {})
+                .getList(new TypeToken<String>() {}, new ArrayList<>())
         );
 
-        expirationTimer = configManager.getConfigNode(CONFIG_FILE_INDEX, "ExpirationTimer").getLong();
+        Tasks.CraftItem.enabled = configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "enabled")
+                .getBoolean(true);
+        Tasks.CraftItem.weight = configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "weight")
+                .getInt(1);
+        // items are loaded postInit
+
+        expirationTimer = configManager.getConfigNode(CONFIG_FILE_INDEX, "ExpirationTimer")
+                .getLong(1440);
 
         Formatting.dateTimeFormat =
-                configManager.getConfigNode(CONFIG_FILE_INDEX, "Formatting", "DateTimeFormat").getString();
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Formatting", "DateTimeFormat")
+                        .getString("yyyy-MM-dd HH:mm");
 
         BingoCard.useMagicCard =
-                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "MagicCard").getBoolean();
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "MagicCard")
+                        .getBoolean(false);
         BingoCard.soldByShopkeepers =
-                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SoldByShopkeepers").getBoolean();
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SoldByShopkeepers")
+                        .getBoolean(true);
         BingoCard.buyPrice =
-                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "BuyPrice").getInt();
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "BuyPrice")
+                        .getInt(100);
         BingoCard.sellPrice =
-                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SellPrice").getInt();
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "BingoCard", "SellPrice")
+                        .getInt(50);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static void loadPostInit(BasicConfigManager configManager) throws ObjectMappingException {
+        Tasks.CraftItem.items = makeItemList(
+                configManager.getConfigNode(CONFIG_FILE_INDEX, "Tasks", "CraftItem", "items")
+                        .getList(new TypeToken<String>() {}, new ArrayList<>())
+        );
     }
 
     private static List<EnumSpecies> makeEnumSpeciesList(List<String> strings) {
@@ -99,6 +130,20 @@ public class PixelmonBingoConfig {
                 } catch (NumberFormatException e) {
                     PixelmonBingoMod.LOGGER.warn("Unrecognized pokemon: {}", s);
                 }
+            }
+        }
+        return list;
+    }
+
+    private static List<Item> makeItemList(List<String> strings) {
+        List<Item> list = new ArrayList<>();
+        for (String s : strings) {
+            Item i = Item.getByNameOrId(s);
+            if (i != null) {
+                list.add(i);
+            }
+            else {
+                PixelmonBingoMod.LOGGER.warn("Unrecognized item: {}", s);
             }
         }
         return list;
