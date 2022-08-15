@@ -63,7 +63,7 @@ public class BingoCard extends BaseItem {
                 Optional<LocalDateTime> expirationTime = getExpirationTime(dateTimeString);
                 Map<Integer, String> card;
                 if (expirationTime.isPresent() && expirationTime.get().isBefore(LocalDateTime.now())
-                        || !bingoCardManager.getPlayerConfigNode(uuid, "Card").hasListChildren()) {
+                        || !bingoCardManager.getPlayerConfigNode(uuid, "Card").hasMapChildren()) {
                     card = BingoCardHelper.generateNewBingoCard(worldIn);
                     bingoCardManager.getPlayerConfigNode(uuid, "Card").setValue(card);
                     expirationTime = setExpirationTimer(bingoCardManager, uuid);
